@@ -69,17 +69,17 @@ const emptyList = []
 describe('total likes', () => {
 
 
-  test('when list has only one blog, equals the likes of that', () => {
+  test('when list has only one blog, returns the likes of that', () => {
     const result = listHelper.totalLikes(listWithOneBlog)
     assert.strictEqual(result, 5)
   })
 
-  test('when list has more than one blog, equals the sum of all likes', () => {
+  test('when list has more than one blog, retuns the sum of all likes', () => {
     const result = listHelper.totalLikes(listWithMoreBlogs)
     assert.strictEqual(result, 36)
   })
 
-  test('when list is empty, equals 0', () => {
+  test('when list is empty, returns 0', () => {
     const result = listHelper.totalLikes(emptyList)
     assert.strictEqual(result, 0)
   })
@@ -88,12 +88,12 @@ describe('total likes', () => {
 
 describe('favorite blog', () => {
 
-  test('when blog list is empty, equals {}', () => {
+  test('when blog list is empty, returns {}', () => {
     const result = listHelper.favoriteBlog(emptyList)
     assert.deepStrictEqual(result, null)
   })
 
-  test('when blog list has only one blog, equals that blog', () => {
+  test('when blog list has only one blog, returns that blog', () => {
     const result = listHelper.favoriteBlog(listWithOneBlog)
     assert.deepStrictEqual(result, {
       title: listWithOneBlog[0].title,
@@ -102,7 +102,7 @@ describe('favorite blog', () => {
     })
   })
 
-  test('when blog list has more than one blog, equals the blog with most likes', () => {
+  test('when blog list has more than one blog, returns the blog with most likes', () => {
     const maxLikes = Math.max(...listWithMoreBlogs.map(b => b.likes))
     const mostLiked = listWithMoreBlogs.find(b => b.likes === maxLikes)
 
@@ -133,6 +133,28 @@ describe('mostBlogs', () => {
     assert.deepStrictEqual(result, {
       author: "Edsger W. Dijkstra",
       blogs: 1
+    });
+  });
+});
+
+describe('mostLikes', () => {
+  test('when list is empty, returns', () => {
+    assert.strictEqual(listHelper.mostLikes([]), null);
+  });
+
+  test('when list has only one blog, returns that author', () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 5
+    });
+  });
+
+  test('when list has more blogs, returns author with most likes', () => {
+    const result = listHelper.mostLikes(listWithMoreBlogs);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 17
     });
   });
 });
