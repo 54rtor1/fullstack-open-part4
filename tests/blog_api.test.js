@@ -1,4 +1,4 @@
-const { test, before, after, beforeEach } = require('node:test')
+const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -46,6 +46,25 @@ test('blog posts have id instead of _id', async () => {
     assert.ok(blog.id, 'Blog should have id property')
     assert.strictEqual(blog._id, undefined, 'Blog should not have _id property')
   })
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: "New Blog Post",
+    author: "Test",
+    url: "http://test.com",
+    likes: 100
+  }
+
+  const initialBlog = (await api.get('/api/blogs')).body.length
+
+  await api
+  .post('/api/blogs')
+  .send(newBlog)
+  .expect(201)
+  .expect('Content-Type', /application\/json/)
+  const updatedBlogs = await api.get('/api/blogs')
+  assert.strictEqual(updatedBlogs.body.length, initialBlog + 1)
 })
 
 after(async () => {
