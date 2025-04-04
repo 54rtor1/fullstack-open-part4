@@ -48,7 +48,7 @@ test('blog posts have id instead of _id', async () => {
   })
 })
 
-test('a valid blog can be added', async () => {
+test('a blog can be added', async () => {
   const newBlog = {
     title: "New Blog Post",
     author: "Test",
@@ -65,6 +65,35 @@ test('a valid blog can be added', async () => {
   .expect('Content-Type', /application\/json/)
   const updatedBlogs = await api.get('/api/blogs')
   assert.strictEqual(updatedBlogs.body.length, initialBlog + 1)
+})
+
+test ('a blog can be deleted', async () => {
+  const blogsAtStart = await api.get('/api/blogs')
+  const blogToDelete = blogsAtStart.body[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await api.get('/api/blogs')
+  assert.strictEqual(blogsAtEnd.body.length, blogsAtStart.body.length - 1)
+}
+)
+
+test ('a blogs likes can be updated', async () => {
+  const blogsAtStart = await api.get('/api/blogs')
+  const blogToUpdate = blogsAtStart.body[0]
+
+  const updatedLikes = {
+    likes: 100
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedLikes)
+    .expect(200)
+
+  assert.strictEqual(response.body.likes, updatedLikes.likes)
 })
 
 after(async () => {
